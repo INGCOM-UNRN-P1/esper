@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "esper"
+version = "0.1.0"
+description = "Explicador pedagógico y formateador interactivo de salidas y errores de GCC/Clang"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+esper = "esper.cli:app"
+
+[project.entry-points."ripley.plugins"]
+gcc_explainer = "esper.plugins.ripley_plugin:EsperPlugin"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["src"]
