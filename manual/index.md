@@ -177,3 +177,52 @@ check-esper:
 ````
 
 Ejecutá `make check-esper` antes de cada commit para asegurar que tu código conserve el estado de aprobación.
+
+---
+
+(manual-esper-arquitectura)=
+## 7. Arquitectura Interna y Mecanismo Técnico
+
+La herramienta **`esper`** implementa un motor de alta precisión basado en:
+
+- **Tecnología Núcleo:** `ISO/IEC 9899:2011/2024 Corpus Matcher + Clang Diagnostic Consumer + Rich Renderer`.
+- **Aislamiento y Determinismo:** Diseñada para operar sin efectos colaterales en entornos de integración continua (CI), terminales de estudiantes y servidores docentes headless.
+- **Manejo de Errores Pedagógico:** Todo fallo de sintaxis, memoria o lógica se traduce en una acción prescriptiva concreta con su respectiva justificación técnica.
+
+---
+
+(manual-esper-ecosistema)=
+## 8. Integración y Conexión con el Ecosistema
+
+````{note}
+Ninguna herramienta opera de forma aislada. **`esper`** forma parte del pipeline integral de evaluación, verificación y enseñanza de la cátedra.
+````
+
+### Diagrama de Flujo e Interoperabilidad
+
+````{mermaid}
+graph TD
+    GCC[GCC / Clang Warnings] --> ESP[Esper: Explicador Normativo]
+    ESP -->|Búsqueda de Cláusula| ISO[Corpus ISO C11 / C23]
+    ESP -->|Cita Canónica Didáctica| DAE[Daedalus: Compilador Asistido]
+    ESP -->|Fundamentación Teórica| RIP[Ripley: Linter de Cátedra]
+````
+
+### Matriz de Intercambio de Datos
+
+| Canal | Herramientas Conectadas | Tipo de Datos Transferidos |
+| :--- | :--- | :--- |
+| **Entradas (Inputs)** | - `Salidas de error y advertencia de GCC/Clang` | Código fuente, AST, binarios, testcases, contratos |
+| **Salidas (Outputs)** | - `daedalus (citas normativas)`
+- `spunkmeyer (fundamento de antipatrones)` | Informes Markdown, diagnósticos Rich, JSON, actas |
+| **Sincronización** | `daedalus`, `ripley`, `spunkmeyer` | Validación cruzada, flags compartidos y autofix |
+
+### Pipeline de Integración Recomendado
+
+Podés encadenar `esper` con otras herramientas del ecosistema en una única línea de comando:
+
+````{code-block} bash
+# Pipeline de integración típico
+daedalus compile src/main.c 2>&1 | esper explain
+````
+
