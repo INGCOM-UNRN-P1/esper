@@ -63,10 +63,30 @@ def render_diagnostics(report: CompilationReport):
         console.print(Panel(content, title=f"[bold {color}]{badge}[/bold {color}]"))
 
 
+def generar_seccion_markdown(report: CompilationReport) -> str:
+    """Genera sección de diagnóstico pedagógico GCC para Dredd."""
+    lines = ["## Explicador Pedagógico de Compilación (Esper)\n"]
+    estado = "✓ Compilación Exitosa" if report.passed else "❌ Falló Compilación"
+    lines.append(f"- **Estado:** {estado}")
+    lines.append(f"- **Diagnósticos procesados:** {len(report.diagnostics)}\n")
+    if report.passed and not report.diagnostics:
+        lines.append("> [!TIP]\n> **Sin Advertencias:** El código no produjo advertencias ni errores del compilador.\n")
+    else:
+        lines.append("| Archivo:Línea | Severidad | Diagnóstico | Causa Raíz | Sugerencia |")
+        lines.append("| :--- | :---: | :--- | :--- | :--- |")
+        for d in report.diagnostics:
+            loc = f"`{Path(d.file_path).name}:{d.line_number}`"
+            sev = d.severity.value if hasattr(d.severity, "value") else str(d.severity)
+            lines.append(f"| {loc} | **{sev}** | {d.title_es} | {d.root_cause_es} | {d.suggestion_es} |")
+        lines.append("")
+    return "\n".join(lines)
+
+
 @app.command(context_settings={"allow_extra_args": True, "ignore_unknown_options": True})
 def compile(
     ctx: typer.Context,
-    json_output: bool = typer.Option(False, "--json", help="Emitir salida en formato JSON estructurado")
+    json_output: bool = typer.Option(False, "--json", help="Emitir salida en formato JSON estructurado"),
+    output_md: Optional[Path] = typer.Option(None, "--md", "--output-md", help="Generar sección de reporte en formato Markdown para fusión en Dredd."),
 ):
     """Envuelve la ejecución de GCC y traduce todos los errores y advertencias."""
     args = ctx.args
@@ -75,6 +95,13 @@ def compile(
         raise typer.Exit(code=2)
 
     report = run_gcc_and_explain(args)
+
+    if output_md:
+        md_text = generar_seccion_markdown(report)
+        output_md.parent.mkdir(parents=True, exist_ok=True)
+        output_md.write_text(md_text, encoding="utf-8")
+        console.print(f"[bold green]✓ Sección Markdown generada en:[/bold green] {output_md}")
+        raise typer.Exit(code=0 if report.passed else 1)
 
     if json_output:
         print(json.dumps(report.model_dump(), indent=2, ensure_ascii=False))
@@ -150,6 +177,22 @@ def pipe(
     render_diagnostics(report)
     if not report.passed:
         raise typer.Exit(code=1)
+
+
+@app.command("report")
+def report_cmd(
+    fuente: Path = typer.Argument(..., help="Archivo C a compilar y explicar."),
+    output: Optional[Path] = typer.Option(None, "--output", "-o", help="Ruta de destino del archivo Markdown."),
+):
+    """Genera directamente la sección de reporte Markdown de ESPER para Dredd."""
+    report = run_gcc_and_explain([str(fuente)])
+    md_content = generar_seccion_markdown(report)
+    if output:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(md_content, encoding="utf-8")
+        console.print(f"[bold green]✓ Reporte Markdown generado en:[/bold green] {output}")
+    else:
+        print(md_content)
 
 
 @app.command()
