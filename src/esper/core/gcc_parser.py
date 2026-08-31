@@ -1,5 +1,6 @@
 """Parser de diagnósticos de GCC/Clang y ejecutor de compilación con explicaciones."""
 
+from __future__ import annotations
 import re
 import subprocess
 from pathlib import Path
@@ -35,7 +36,12 @@ def parse_gcc_output(raw_stderr: str) -> List[GccDiagnostic]:
         }
         severity = severity_map.get(sev_str, DiagnosticSeverity.ERROR)
 
-        title, explanation, root_cause, suggestion = lookup_explanation(msg)
+        title, explanation, root_cause, suggestion, matched_flag, citation, sugg_flags = lookup_explanation(
+            f"{msg} [{flag}]" if flag else msg
+        )
+
+        # Si el parser extrajo un flag explícito, darle prioridad
+        final_flag = flag or matched_flag
 
         # Intentar leer snippet del archivo si existe
         snippet = None
@@ -54,12 +60,14 @@ def parse_gcc_output(raw_stderr: str) -> List[GccDiagnostic]:
             column_number=col_no,
             severity=severity,
             raw_message=msg,
-            flag=flag,
+            flag=final_flag,
             title_es=title,
             explanation_es=explanation,
             root_cause_es=root_cause,
             suggestion_es=suggestion,
-            code_snippet=snippet
+            code_snippet=snippet,
+            iso_c_citation=citation,
+            suggested_flags=sugg_flags
         ))
 
     # Linker errors: "undefined reference to `foo'"
@@ -68,7 +76,7 @@ def parse_gcc_output(raw_stderr: str) -> List[GccDiagnostic]:
             parts = line.split(":")
             f_path = parts[0].strip() if len(parts) > 1 else "ld"
             msg = parts[-1].strip() if len(parts) > 1 else line
-            title, explanation, root_cause, suggestion = lookup_explanation("undefined reference to")
+            title, explanation, root_cause, suggestion, flag, citation, sugg_flags = lookup_explanation("undefined reference to")
             diagnostics.append(GccDiagnostic(
                 file_path=f_path,
                 line_number=1,
@@ -77,7 +85,9 @@ def parse_gcc_output(raw_stderr: str) -> List[GccDiagnostic]:
                 title_es=title,
                 explanation_es=explanation,
                 root_cause_es=root_cause,
-                suggestion_es=suggestion
+                suggestion_es=suggestion,
+                iso_c_citation=citation,
+                suggested_flags=sugg_flags
             ))
 
     return diagnostics

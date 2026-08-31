@@ -1,5 +1,6 @@
 """Modelos de datos para el diagnóstico y explicación de errores de GCC en ESPER."""
 
+from __future__ import annotations
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
@@ -24,6 +25,9 @@ class GccDiagnostic(BaseModel):
     root_cause_es: str
     suggestion_es: str
     code_snippet: Optional[str] = None
+    iso_c_citation: Optional[str] = None
+    suggested_flags: List[str] = Field(default_factory=list)
+    is_suppressed: bool = False
 
 
 class CompilationReport(BaseModel):
@@ -32,3 +36,4 @@ class CompilationReport(BaseModel):
     passed: bool = True
     diagnostics: List[GccDiagnostic] = Field(default_factory=list)
     raw_stderr: str = ""
+    suppressed_count: int = 0
