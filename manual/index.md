@@ -347,3 +347,12 @@ Podés encadenar `esper` con otras herramientas del ecosistema en una única lí
 daedalus compile src/main.c 2>&1 | esper explain
 ````
 
+---
+
+(manual-esper-seccion-plugins)=
+## 9. Extensión, Desarrollo de Plugins y API Python
+
+Para crear tus propias reglas, conectores de evaluación o integrar `esper` programáticamente en pipelines de CI/CD:
+
+- 👉 **Consultá la guía completa:** [Guía de Extensión y Creación de Plugins](plugins.md)
+
