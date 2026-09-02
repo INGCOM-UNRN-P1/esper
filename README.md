@@ -4,6 +4,34 @@
 
 ---
 
+## 🎯 Alcance
+
+### Qué cubre
+- Base de conocimiento pedagógica referenciada formalmente a la norma ISO/IEC 9899 (estándares C11 y C23).
+- Interceptor y wrapper para invocaciones de compilación (`make`, `gcc`), deduplicando cascadas masivas de advertencias.
+- Sugerencia automática de flags de biblioteca requeridas (`-lm`, `-pthread`, `-lrt`).
+- Explicación didáctica contextualizada de conceptos de C subyacentes a errores de compilación frecuentes.
+
+### Qué no cubre (Límites y Delegación)
+- Invocación primaria y gestión de políticas de compilación (delegado a `daedalus`).
+- Formateo y estilo de código (delegado a `gaff`).
+- Comprobación de tipos de datos abstractos (delegado a `motoko`).
+
+---
+
+## 📋 Requisitos
+
+### Requisitos de Sistema y Entorno
+- Multiplataforma. Python >= 3.10.
+
+### Dependencias Externas y Binarios
+- Ninguno obligatorio.
+
+### Integración en el Ecosistema
+- CLI `esper`. Plugin registrado en `ripley.plugins` (`gcc_explainer`).
+
+---
+
 ## 🚀 Uso Rápido
 
 ```bash
