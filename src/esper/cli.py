@@ -75,7 +75,10 @@ def render_diagnostics(report: CompilationReport, dedup: bool = False):
 
 def generar_seccion_markdown(report: CompilationReport) -> str:
     """Genera sección de diagnóstico pedagógico GCC para Dredd."""
-    lines = ["## Explicador Pedagógico de Compilación (Esper)\n"]
+    lines = [
+        "<!-- dredd-section: esper v1.0.0 -->\n",
+        "## Explicador Pedagógico de Compilación (Esper)\n",
+    ]
     estado = "✓ Compilación Exitosa" if report.passed else "❌ Falló Compilación"
     lines.append(f"- **Estado:** {estado}")
     lines.append(f"- **Diagnósticos procesados:** {len(report.diagnostics)}\n")
@@ -87,8 +90,12 @@ def generar_seccion_markdown(report: CompilationReport) -> str:
         for d in report.diagnostics:
             loc = f"`{Path(d.file_path).name}:{d.line_number}`"
             sev = d.severity.value if hasattr(d.severity, "value") else str(d.severity)
-            norma = f"*{d.iso_c_citation}*" if d.iso_c_citation else "N/A"
-            lines.append(f"| {loc} | **{sev}** | {d.title_es} | {norma} | {d.root_cause_es} | {d.suggestion_es} |")
+            norma_txt = f"*{d.iso_c_citation}*" if d.iso_c_citation else "N/A"
+            tit_limpio = d.title_es.replace("|", "&#124;")
+            norma_limpia = norma_txt.replace("|", "&#124;")
+            causa_limpia = d.root_cause_es.replace("|", "&#124;")
+            sug_limpia = d.suggestion_es.replace("|", "&#124;")
+            lines.append(f"| {loc} | **{sev}** | {tit_limpio} | {norma_limpia} | {causa_limpia} | {sug_limpia} |")
         lines.append("")
     return "\n".join(lines)
 

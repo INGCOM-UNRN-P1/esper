@@ -31,6 +31,7 @@ class GccDiagnostic(BaseModel):
 
 
 class CompilationReport(BaseModel):
+    schema_version: str = "1.0.0"
     command: List[str] = Field(default_factory=list)
     exit_code: int = 0
     passed: bool = True
