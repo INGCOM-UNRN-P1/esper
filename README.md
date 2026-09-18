@@ -47,3 +47,20 @@ gcc -Wall main.c -o app 2>&1 | esper pipe
 # Salida estructurada JSON
 esper compile main.c -o app --json
 ```
+
+
+## 📚 Referencia de comandos
+
+| Comando | Para qué sirve |
+| :--- | :--- |
+| `compile ... [--dedup] [--json] [--md ARCHIVO] [--guide]` | Envuelve a GCC y traduce errores y advertencias. |
+| `wrapper ...` | Modo transparente para Makefiles: ejecuta el comando interceptando sus errores. |
+| `explain [CONSULTA] [--json] [--guide]` | Explica un mensaje puntual o consulta el catálogo por advertencia (`-Wformat`). |
+| `pipe [--dedup] [--json]` | Lee mensajes de GCC por stdin: `gcc ... 2>&1 \| esper pipe`. |
+| `list-warnings` / `catalog [--json]` | Catálogo de advertencias documentadas (son el mismo comando). |
+| `suggest-flags FUENTE` | Sugiere flags de compilación/enlazado que faltan. |
+| `check-arch LOG` | Advertencias de tamaño que cambian entre 32 y 64 bits. |
+| `guide FUENTE [-o ARCHIVO]` | Guía de resolución paso a paso en Markdown. |
+| `report FUENTE [-o ARCHIVO]` | Sección Markdown para Dredd. |
+| `doctor [--json] [-v]` | Verifica el entorno: compiladores y dependencias. |
+| `version` | Muestra la versión. |
