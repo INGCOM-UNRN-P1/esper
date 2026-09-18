@@ -17,6 +17,12 @@ from esper.cli import app
 runner = CliRunner()
 necesita_gcc = pytest.mark.skipif(not shutil.which("gcc"), reason="requiere gcc")
 
+@pytest.fixture(autouse=True)
+def _en_directorio_temporal(tmp_path_factory, monkeypatch):
+    """`guide`/`report` invocan gcc sin `-o`: el `a.out` no debe caer en el repositorio."""
+    monkeypatch.chdir(tmp_path_factory.mktemp("cwd"))
+
+
 LIMPIO = "int main(void) { return 0; }\n"
 CON_ADVERTENCIA = "int main(void) { int sin_usar = 0; return 0; }\n"
 CON_ERROR = "int main(void) { return x; }\n"
