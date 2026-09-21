@@ -45,7 +45,8 @@ esper = "esper.cli:app"
 [project.entry-points."ripley.plugins"]
 gcc_explainer = "esper.plugins.ripley_plugin:EsperPlugin"
 
-[project.optional-dependencies]
+[dependency-groups]
+# PEP 735: uv lo instala con `uv sync` a secas.
 dev = [
     "pytest>=7.4.0",
 ]
