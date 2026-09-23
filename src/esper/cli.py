@@ -23,7 +23,7 @@ from esper.core.doctor import ejecutar_diagnostico_doctor
 
 app = typer.Typer(
     name="esper",
-    help="Explicador pedagógico y formateador interactivo de salidas y errores de GCC/Clang",
+    help="Explicador pedagógico de GCC/Clang (Consolidado en DAEDALUS; se recomienda usar 'daedalus').",
     add_completion=True
 )
 console = Console()
