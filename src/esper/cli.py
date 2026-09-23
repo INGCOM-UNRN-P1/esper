@@ -75,8 +75,9 @@ def render_diagnostics(report: CompilationReport, dedup: bool = False):
 
 def generar_seccion_markdown(report: CompilationReport) -> str:
     """Genera sección de diagnóstico pedagógico GCC para Dredd."""
+    status = "ok" if report.passed else "fail"
     lines = [
-        "<!-- dredd-section: esper v1.0.0 -->\n",
+        f"<!-- dredd-section: esper, tool=esper, version=1.0.0, status={status} -->\n",
         "## Explicador Pedagógico de Compilación (Esper)\n",
     ]
     estado = "✓ Compilación Exitosa" if report.passed else "❌ Falló Compilación"
