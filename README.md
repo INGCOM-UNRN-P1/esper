@@ -1,5 +1,7 @@
 # ESPER — Explicador Pedagógico y Formateador de Diagnósticos GCC/Clang
 
+> 📖 **Manual de Usuario:** Para una guía exhaustiva de comandos, banderas, arquitectura y ejemplos, consultá el [Manual de Uso](MANUAL.md).
+
 **ESPER** envuelve la invocación del compilador GCC/Clang e intercepta errores, advertencias (`-Wall -Wextra -pedantic`) y notas del linker, traduciéndolas en paneles interactivos con diagnósticos pedagógicos en español rioplatense, causas raíz típicas y acciones correctivas sugeridas.
 
 ---
